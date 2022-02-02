@@ -1,15 +1,21 @@
 const express = require('express');
+const cors = require('cors');
+const connection = require('./conf');
 
 const app = express();
+const backPort = process.env.PORT;
 
-app.get('/characters', async (req, res) => {
-  res.status(404).send('Route not found! ');
+connection.connect((err) => {
+  if (err) {
+    console.error(`error connection: ${err.stack}`);
+  } else {
+    console.log(`connected to database with threadId: ${connection.threadId}`);
+  }
 });
 
-app.use('/', (req, res) => {
-  res.status(404).send('Route not found! ');
-});
+app.use(express.json);
+app.use(cors());
 
-app.listen(5050, () => {
-  console.log('Terra Battle API now available on http://localhost:5050 !');
+app.listen(connection.backPort, () => {
+  console.log(`You are now connected on port ${backPort}`);
 });
