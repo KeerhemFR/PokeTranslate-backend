@@ -16,4 +16,17 @@ router.get('/:search', async (req, res) => {
   }
 });
 
+router.get('/details/:dataName', async (req, res) => {
+  const { dataName } = req.params;
+  try {
+    const [pokemon] = await connection.query(
+      `SELECT nameFr, nameEn, nameJp, evolveFrom, pkmnDescFr, pkmnDescEn, pkmnDescJp, nationalDexId, visual, visualShiny, officialArt, type1, type2, generation FROM pokemons WHERE nameEn = ?`,
+      [`${dataName}`]
+    );
+    res.status(200).json(pokemon);
+  } catch (err) {
+    res.status(500).send('Error retrieving the pokemon');
+  }
+});
+
 module.exports = router;
