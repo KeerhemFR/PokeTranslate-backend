@@ -16,4 +16,17 @@ router.get('/:search', async (req, res) => {
   }
 });
 
+router.get('/details/:dataName', async (req, res) => {
+  const { dataName } = req.params;
+  try {
+    const [nature] = await connection.query(
+      `SELECT nameFr, nameEn, nameJp, downStat, upStat, likeFlavor, hateFlavor FROM natures WHERE nameEn = ?`,
+      [`${dataName}`]
+    );
+    res.status(200).json(nature);
+  } catch (err) {
+    res.status(500).send('Error retrieving the nature');
+  }
+});
+
 module.exports = router;
